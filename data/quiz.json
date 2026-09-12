@@ -1,0 +1,90 @@
+[
+    {
+        "id_pergunta": 1,
+        "pergunta": "O conjunto de valores servem como um critério que norteiam as pessoas envolvidas no desenvolvimento do software, além de se complementarem. Todos estão corretos exceto:",
+        "respostas": [
+            {
+                "id": "errada_1",
+                "texto": "Comunicação"
+            },
+            {
+                "id": "errada_2",
+                "texto": "Simplicidade"
+            },
+            {
+                "id": "errada_3",
+                "texto": "Feedback"
+            },
+            {
+                "id": "correta",
+                "texto": "Responsabilidade"
+            }
+        ]
+    },
+    {
+        "id_pergunta": 2,
+        "pergunta": "As práticas consistem no núcleo principal do processo. Elas evidenciam os valores que nos ajudarão a ter sucesso no projeto. Dentre os valores, qual seria a mais importante na metodologia XP?",
+        "respostas": [
+            {
+                "id": "correta",
+                "texto": "Limitar o trabalho em processo"
+            },
+            {
+                "id": "errada_1",
+                "texto": "Programação em Par"
+            },
+            {
+                "id": "errada_2",
+                "texto": "Stand Up Meeting"
+            },
+            {
+                "id": "errada_3",
+                "texto": "Planejamento"
+            }
+        ]
+    },
+    {
+        "id_pergunta": 3,
+        "pergunta": "Qual a sequência correta dos três passos do TDD (Test Driven Development / Desenvolvimento orientado a teste) ?",
+        "respostas": [
+            {
+                "id": "errada_1",
+                "texto": "Refatoração -> Teste -> Código"
+            },
+            {
+                "id": "errada_2",
+                "texto": "Código -> Teste -> Refatoração"
+            },
+            {
+                "id": "errada_3",
+                "texto": "Teste -> Refatoração -> Código"
+            },
+            {
+                "id": "correta",
+                "texto": "Teste -> Código -> Refatoração"
+            }
+        ]
+    },
+    {
+        "id_pergunta": 4,
+        "pergunta": "Em qual tipo de cenário ou projeto o Extreme Programming (XP) é mais indicado e costuma trazer os melhores resultados?",
+        "respostas": [
+            {
+                "id": "errada_1",
+                "texto": "Em projetos com requisitos totalmente fixos, prazos longos e onde o cliente não quer se envolver."
+            },
+            {
+                "id": "errada_2",
+                "texto": "Em equipes gigantescas com centenas de desenvolvedores espalhados pelo mundo que se comunicam apenas por e-mail."
+            },
+            {
+                "id": "correta",
+                "texto": "Em projetos com requisitos que mudam muito rápido, com tecnologias novas e onde o risco de falhas é alto."
+            },
+            {
+                "id": "errada_3",
+                "texto": "Apenas no desenvolvimento de sistemas de hardware antigos que não aceitam atualizações de software."
+            }
+        ]
+    }
+]
