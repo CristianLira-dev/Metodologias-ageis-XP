@@ -4,6 +4,14 @@ const perguntaCard = document.getElementById("text-question");
 // Seleciona o contêiner dos botões
 const containerAlternativas = document.getElementById("container-alternativas");
 
+//seleciona o container da tela de pergunta
+const telaPergunta = document.getElementById("tela-pergunta");
+
+//seleciona o container da tela de erro
+const telaErro = document.getElementById("tela-erro");
+
+//seleciona o container da tela de sucesso
+const telaSucesso = document.getElementById("tela-sucesso");
 
 // Cria listas (arrays) vazias para registrar as perguntas que o usuário acertou e errou
 let acertos = [];
@@ -72,13 +80,32 @@ function validar_resposta (response_question, id_pergunta){ //parametros que ser
     if (id_pergunta != "correta"){ //verifica se o id da pergunta é diferente de "correta"
         alert("errou") //avisso de erro trocar para modal futuramente..
         erros.push(response_question) //adicionar o a resposta a lista de erros
-        window.location = "error.html" //redireciona o usuario para a pagina de erro
+        telaPergunta.style.display = "none"; //oculta a tela com a pergunta atual
+        telaErro.style.display = "block"; //mostra a div da tela de erro simulando a navegação
         return; //cancela a função para que o bloco abaixo não execute 
     } 
     acertos.push(response_question) //adiciona a resposta a lista de acertos
     alert("Acertou") //aviso de acerto (trocar para modal depois...)
-    window.location = "success.html" //redireciona o usuario para pagina de acerto
-
+    telaPergunta.style.display = "none"; //oculta a tela com a pergunta atual
+    telaSucesso.style.display = "block"; //mostra a div da tela de sucesso simulando a navegação
 }
 
 carregarQuiz(); //carregar quiz ao entrar no site
+
+/* 
+ * ESTRUTURA DE CADA PÁGINA (FLUXO DO JOGO)
+ *
+ * Página da Pergunta (Principal)
+ * - Texto da pergunta em destaque.
+ * - 4 botões com as alternativas (que serão embaralhadas pelo sistema).
+ *
+ * Página de Sucesso
+ * - Mensagem de acerto (ex: "Você acertou!").
+ * - Botão "Próxima Pergunta" (para avançar no quiz).
+ *
+ * Página de Erro
+ * - Mensagem indicando que o usuário errou.
+ * - Botão "Responder Novamente" (volta para a mesma perguntas).
+ * - Botão "Ver Resposta Correta" (mostra qual era a opção certa).
+ * - Botão "Pular Pergunta" (ignora o erro e avança para a próxima).
+ */
