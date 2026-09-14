@@ -1,25 +1,360 @@
-
-body{
-    padding: 0;
-    margin: 0;
+/* Remove as margens e espaçamentos padrão de todos os elementos */
+* {
+  margin: 0; /* Remove margem externa */
+  padding: 0; /* Remove espaçamento interno */
+  box-sizing: border-box; /* Faz width e height incluírem padding e border */
 }
+
+
+/* Faz o HTML e o body ocuparem toda a largura da página */
+html,
+body {
+  width: 100%; /* Ocupa toda a largura disponível */
+  min-height: 100%; /* Garante pelo menos 100% da altura */
+}
+
+
+/* =========================
+   CORPO DA PÁGINA
+========================= */
+
+body {
+  min-height: 100dvh; /* Ocupa toda a altura visível da tela */
+
+  color: #1f2937; /* Cor padrão dos textos */
+
+  /* Cria o fundo com várias camadas de degradê */
+  background:
+    /* Mancha amarelada no canto superior direito */
+    radial-gradient(
+      circle at 88% 4%,
+      #e0dc9d4d,
+      transparent 42%
+    ),
+
+    /* Mancha verde clara no canto inferior esquerdo */
+    radial-gradient(
+      circle at 19% 92%,
+      #6f9666d9,
+      transparent 47%
+    ),
+
+    /* Mancha verde clara na parte superior */
+    radial-gradient(
+      circle at 47% 8%,
+      #7c9e62b3,
+      transparent 38%
+    ),
+
+    /* Mancha verde escura */
+    radial-gradient(
+      circle at 73% 61%,
+      #246c39bf,
+      transparent 50%
+    ),
+
+    /* Cor principal do fundo */
+    linear-gradient(
+      135deg,
+      #236b3f,
+      #457e4d 45%,
+      #176238
+    );
+
+  background-size: cover; /* Faz o fundo preencher toda a tela */
+
+  background-attachment: fixed; /* Mantém o fundo parado durante a rolagem */
+}
+
+
+/* =========================
+   TELA PRINCIPAL DO QUIZ
+========================= */
+
+#tela-pergunta {
+  width: 100%; /* Ocupa toda a largura da página */
+
+  min-height: 100dvh; /* Ocupa no mínimo toda a altura da tela */
+
+  display: flex; /* Ativa o Flexbox */
+
+  justify-content: center; /* Centraliza horizontalmente */
+
+  align-items: center; /* Centraliza verticalmente */
+}
+
+
+/* =========================
+   CONTEÚDO PRINCIPAL
+========================= */
 
 .content {
-    display:flex;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100dvh;
-    background-image: url(../assets/img/background.jpg);
-    background-repeat: no-repeat;
-    background-size: 100%;
+  width: 100%; /* Permite ocupar toda a largura disponível */
 
+  max-width: 900px; /* Impede que o conteúdo fique muito largo */
+
+  display: flex; /* Ativa o Flexbox */
+
+  flex-direction: column; /* Organiza os elementos verticalmente */
+
+  align-items: center; /* Centraliza os elementos horizontalmente */
+
+  gap: 28px; /* Espaço entre o card e as alternativas */
 }
 
-.card-question {
-     width:50%;
-     height:auto;
-     background-color: #fff;
-     margin-top: 30px;
 
+/* =========================
+   CARD DA PERGUNTA
+========================= */
+
+.card-question {
+  position: relative;
+  /* Permite posicionar o badge em relação ao card */
+
+  width: 100%;
+  /* Card ocupa toda a largura disponível do .content */
+
+  min-height: 180px;
+  /* Altura mínima do card */
+
+  background: rgba(255, 255, 255, 0.96);
+  /* Fundo branco com pequena transparência */
+
+  display: flex;
+  /* Ativa o Flexbox */
+
+  align-items: center;
+  /* Centraliza horizontalmente */
+
+  justify-content: center;
+  /* Centraliza verticalmente */
+
+  flex-direction: column;
+  /* Organiza os elementos um abaixo do outro */
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.12),
+    0 4px 15px rgba(0, 0, 0, 0.05);
+  /* Adiciona sombra para dar profundidade ao card */
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* Adiciona uma borda branca suave */
+}
+
+
+/* =========================
+   ÍCONE / BADGE
+========================= */
+
+.badge {
+  position: absolute;
+  /* Permite colocar o badge sobre o card */
+
+  top: 0;
+  /* Posiciona no topo do card */
+
+  left: 50%;
+  /* Posiciona no centro horizontal */
+
+  transform: translate(-50%, -50%);
+  /*
+    Move o badge 50% para esquerda
+    e 50% para cima para centralizá-lo
+  */
+
+  width: 70px;
+  /* Largura do círculo */
+
+  height: 70px;
+  /* Altura do círculo */
+
+  display: flex;
+  /* Ativa o Flexbox */
+
+  align-items: center;
+  /* Centraliza o ? verticalmente */
+
+  justify-content: center;
+  /* Centraliza o ? horizontalmente */
+
+  color: #ffffff;
+  /* Cor branca do ? */
+
+  background: linear-gradient(
+    135deg,
+    #d44545,
+    #a2110c
+  );
+  /* Degradê vermelho do círculo */
+
+  border-radius: 50%;
+  /* Transforma o elemento em círculo */
+
+  font-size: 38px;
+  /* Tamanho do ? */
+
+  font-weight: 700;
+  /* Deixa o ? em negrito */
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  /* Cria sombra abaixo do círculo */
+}
+
+
+/* =========================
+   TEXTO DA PERGUNTA
+========================= */
+
+.text-question {
+  /*
+    Aqui você poderá definir:
+    - tamanho da fonte
+    - cor
+    - alinhamento
+    - peso da fonte
+    - espaçamento entre linhas
+  */
+}
+
+
+/* =========================
+   CONTAINER DAS ALTERNATIVAS
+========================= */
+
+#container-alternativas {
+  /*
+    Container responsável por armazenar
+    todos os grupos de respostas.
+  */
+}
+
+
+/* =========================
+   GRUPO DE BOTÕES
+========================= */
+
+.grupo-botoes {
+  /*
+    Essa classe é criada pelo JavaScript.
+
+    Cada grupo contém duas alternativas.
+
+    Aqui você pode usar:
+    display: grid;
+    ou
+    display: flex;
+  */
+}
+
+
+/* =========================
+   BOTÕES DAS RESPOSTAS
+========================= */
+
+.button-awnser {
+  /*
+    Estilo padrão dos botões de resposta.
+
+    Aqui você poderá definir:
+    - largura
+    - altura
+    - fundo
+    - borda
+    - fonte
+    - espaçamento
+    - cursor
+  */
+}
+
+
+/* Quando o mouse estiver sobre a resposta */
+.button-awnser:hover {
+  /*
+    Exemplo:
+    alterar fundo,
+    borda,
+    sombra ou posição.
+  */
+}
+
+
+/* Quando o usuário estiver clicando no botão */
+.button-awnser:active {
+  /*
+    Pode ser usado para criar
+    um pequeno efeito de clique.
+  */
+}
+
+
+/* Quando o botão estiver selecionado pelo teclado */
+.button-awnser:focus-visible {
+  /*
+    Importante para acessibilidade.
+
+    Pode mostrar uma borda ao navegar
+    usando a tecla TAB.
+  */
+}
+
+
+/* =========================
+   TELAS DE SUCESSO E ERRO
+========================= */
+
+#tela-sucesso,
+#tela-erro {
+  width: 100%;
+  /* Ocupa toda a largura */
+
+  min-height: 100dvh;
+  /* Ocupa toda a altura da tela */
+
+  padding: 24px;
+  /* Espaçamento interno */
+}
+
+
+/* =========================
+   RESPONSIVIDADE - NOTEBOOK
+========================= */
+
+/*
+  Essas regras serão aplicadas
+  quando a tela possuir até 1024px.
+*/
+
+@media (max-width: 1024px) {
+
+  #tela-pergunta {
+    padding: 45px 30px;
+    /*
+      45px em cima e embaixo
+      30px nas laterais
+    */
+  }
+
+
+  .content {
+    max-width: 780px;
+    /* Diminui a largura máxima do conteúdo */
+  }
+
+
+  .card-question {
+    padding: 55px 32px 32px;
+    /*
+      55px em cima
+      32px nas laterais
+      32px embaixo
+    */
+  }
+
+
+  .button-awnser {
+    /*
+      Ajustes específicos dos botões
+      para notebooks podem ser colocados aqui.
+    */
+  }
 }
