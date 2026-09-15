@@ -206,6 +206,7 @@ body {
 ========================= */
 
 .text-question {
+    text-align: center;
   /*
     Aqui você poderá definir:
     - tamanho da fonte
@@ -222,6 +223,7 @@ body {
 ========================= */
 
 #container-alternativas {
+
   /*
     Container responsável por armazenar
     todos os grupos de respostas.
@@ -252,19 +254,19 @@ body {
 ========================= */
 
 .button-awnser {
-    color:#1f2937;
+    color:hsl(0, 0%, 42%);
     border: none;
     border-radius: 30px;
     padding:20px;
     background: linear-gradient(
       270deg,
-      #d44545,
-      #a2110c
+      hwb(98 71% 5%),
+      hsl(49, 100%, 50%)
     );
-    font-family: 'Times New Roman', Times, serif;
     margin: 8px;
     width: 434px;
     height:auto;
+    font-size: 20px;
   /*
     Estilo padrão dos botões de resposta.
 
