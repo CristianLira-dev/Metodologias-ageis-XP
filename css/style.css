@@ -252,6 +252,19 @@ body {
 ========================= */
 
 .button-awnser {
+    color:#1f2937;
+    border: none;
+    border-radius: 30px;
+    padding:20px;
+    background: linear-gradient(
+      270deg,
+      #d44545,
+      #a2110c
+    );
+    font-family: 'Times New Roman', Times, serif;
+    margin: 8px;
+    width: 434px;
+    height:auto;
   /*
     Estilo padrão dos botões de resposta.
 
@@ -266,9 +279,9 @@ body {
   */
 }
 
-
 /* Quando o mouse estiver sobre a resposta */
 .button-awnser:hover {
+    border: 2px solid black;
   /*
     Exemplo:
     alterar fundo,
