@@ -19,53 +19,51 @@ body {
 ========================= */
 
 body {
-  min-height: 100dvh; /* Ocupa toda a altura visível da tela */
+  min-height: 100dvh;
 
-  color: #1f2937; /* Cor padrão dos textos */
+  color: #f8fafc;
 
-  /* Cria o fundo com várias camadas de degradê */
   background:
-    /* Mancha amarelada no canto superior direito */
+    /* Ponto azul quase branco no topo direito */
     radial-gradient(
-      circle at 88% 4%,
-      #e0dc9d4d,
-      transparent 42%
+      circle at 88% 6%,
+      #eff6ff70,
+      transparent 24%
     ),
 
-    /* Mancha verde clara no canto inferior esquerdo */
+    /* Ponto azul bem claro no canto inferior esquerdo */
     radial-gradient(
-      circle at 19% 92%,
-      #6f9666d9,
-      transparent 47%
+      circle at 15% 88%,
+      #dbeafe55,
+      transparent 28%
     ),
 
-    /* Mancha verde clara na parte superior */
+    /* Pequena iluminação no topo */
     radial-gradient(
-      circle at 47% 8%,
-      #7c9e62b3,
-      transparent 38%
+      circle at 45% 10%,
+      #bfdbfe45,
+      transparent 22%
     ),
 
-    /* Mancha verde escura */
+    /* Azul mais vivo no centro/direita */
     radial-gradient(
-      circle at 73% 61%,
-      #246c39bf,
-      transparent 50%
+      circle at 72% 58%,
+      #2563eb90,
+      transparent 45%
     ),
 
-    /* Cor principal do fundo */
+    /* Fundo principal predominantemente azul */
     linear-gradient(
       135deg,
-      #236b3f,
-      #457e4d 45%,
-      #176238
+      #0f3d91,
+      #1d4ed8 45%,
+      #2563eb 72%,
+      #1746a2
     );
 
-  background-size: cover; /* Faz o fundo preencher toda a tela */
-
-  background-attachment: fixed; /* Mantém o fundo parado durante a rolagem */
+  background-size: cover;
+  background-attachment: fixed;
 }
-
 
 /* =========================
    TELA PRINCIPAL DO QUIZ
@@ -100,29 +98,63 @@ body {
 }
 
 /* =========================================
-   ANIMAÇÃO 2: FUNDO VERMELHO (Para o BODY)
+   ANIMAÇÃO 2: "Pelicula" por cima do body
    ========================================= */
 /* Prepara uma camada invisível por cima do fundo do body */
 body::before {
   content: "";
-  position: fixed; /* Cobre a tela toda */
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background-color: rgba(220, 38, 38, 0.6); /* Vermelho translúcido */
-  z-index: -1; /* Fica atrás da main, mas na frente do fundo original */
-  opacity: 0; /* Invisível por padrão */
-  pointer-events: none; /* Impede que essa camada bloqueie os cliques */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* Sem cor fixa aqui */
+  background-color: transparent;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* Quando o body ganhar esta classe, dispara a animação de opacidade */
+/* =========================================
+   ERRO - FUNDO VERMELHO
+========================================= */
+
 body.animacao-fundo-erro::before {
-  animation: piscarFundo 2s ease-in-out;
+  background-color: rgba(220, 38, 38, 0.6);
+  animation: piscarFundoErro 2s ease-in-out;
 }
 
-@keyframes piscarFundo {
+@keyframes piscarFundoErro {
   0% { opacity: 0; }
   10% { opacity: 1; } /* Aparece rápido */
   80% { opacity: 1; } /* Mantém a tela vermelha */
   100% { opacity: 0; } /* Some suavemente */
+}
+
+/* =========================================
+   ANIMAÇÃO: FUNDO VERDE (ACERTO)
+   ========================================= */
+
+body.animacao-fundo-acerto::before {
+  background-color: rgba(34, 197, 94, 0.55);
+
+  animation: piscarFundoAcerto 2s ease-in-out;
+}
+
+/* Animação do acerto */
+@keyframes piscarFundoAcerto {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* =========================
@@ -180,6 +212,8 @@ body.animacao-fundo-erro::before {
 
   border: 1px solid rgba(255, 255, 255, 0.5);
   /* Adiciona uma borda branca suave */
+
+  color: #1E2939;
 }
 
 
@@ -221,12 +255,26 @@ body.animacao-fundo-erro::before {
   color: #ffffff;
   /* Cor branca do ? */
 
-  background: linear-gradient(
+background:
+  radial-gradient(
+    circle at 85% 10%,
+    #dbeafe70,
+    transparent 28%
+  ),
+
+  radial-gradient(
+    circle at 18% 85%,
+    #bfdbfe45,
+    transparent 30%
+  ),
+
+  linear-gradient(
     135deg,
-    #d44545,
-    #a2110c
+    #2563eb,
+    #123b8f
   );
   /* Degradê vermelho do círculo */
+  
 
   border-radius: 50%;
   /* Transforma o elemento em círculo */

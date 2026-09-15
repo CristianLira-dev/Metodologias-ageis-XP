@@ -141,10 +141,23 @@ function validar_resposta(response_question, id_pergunta, botao) {
 
   // Se chegou aqui, a resposta foi correta; adiciona o texto à lista de acertos
   acertos.push(response_question);
-  // Exibe um aviso temporário de acerto
-  alert("Acertou");
-  // Avança o quiz para a próxima pergunta
-  avancarProximaPergunta();
+  // Faz o fundo da tag <body> ficar vermelho
+  document.body.classList.add("animacao-fundo-acerto");
+window.addEventListener("click", (event) => {
+    confetti({ 
+    position: { x: event.clientX, y: event.clientY },
+    count: 100,			// Number of particles
+    size: 2,			// Size of the particles
+    velocity: 200,		// Initial particle velocity
+    fade: true,			// Particles fall off the screen, or fade out
+    color: ["#05921f"]          // Palette the particles are picked from 
+    });
+});
+botao.disabled = true;
+   setTimeout( () => {
+        // Avança o quiz para a próxima pergunta
+        avancarProximaPergunta();
+      }, 3000);
 }
 
 // Função responsável pelo fluxo de avançar a pergunta ou finalizar o quiz
