@@ -83,6 +83,47 @@ body {
   align-items: center; /* Centraliza verticalmente */
 }
 
+/* =========================================
+   ANIMAÇÃO 1: TREMIDA (Para a tag MAIN)
+   ========================================= */
+.animacao-tremer {
+  animation: tremer 0.4s ease-in-out;
+}
+
+@keyframes tremer {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-10px); }
+  80% { transform: translateX(10px); }
+  100% { transform: translateX(0); }
+}
+
+/* =========================================
+   ANIMAÇÃO 2: FUNDO VERMELHO (Para o BODY)
+   ========================================= */
+/* Prepara uma camada invisível por cima do fundo do body */
+body::before {
+  content: "";
+  position: fixed; /* Cobre a tela toda */
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background-color: rgba(220, 38, 38, 0.6); /* Vermelho translúcido */
+  z-index: -1; /* Fica atrás da main, mas na frente do fundo original */
+  opacity: 0; /* Invisível por padrão */
+  pointer-events: none; /* Impede que essa camada bloqueie os cliques */
+}
+
+/* Quando o body ganhar esta classe, dispara a animação de opacidade */
+body.animacao-fundo-erro::before {
+  animation: piscarFundo 2s ease-in-out;
+}
+
+@keyframes piscarFundo {
+  0% { opacity: 0; }
+  10% { opacity: 1; } /* Aparece rápido */
+  80% { opacity: 1; } /* Mantém a tela vermelha */
+  100% { opacity: 0; } /* Some suavemente */
+}
 
 /* =========================
    CONTEÚDO PRINCIPAL
@@ -215,6 +256,10 @@ body {
     - peso da fonte
     - espaçamento entre linhas
   */
+}
+
+.blocked{
+  background-color: red;  
 }
 
 

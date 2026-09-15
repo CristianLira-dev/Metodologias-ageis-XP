@@ -1,96 +1,193 @@
 // Seleciona o elemento no HTML onde o texto da pergunta vai aparecer
 const perguntaCard = document.getElementById("text-question");
 
-// Seleciona o contêiner dos botões
+const modalEsgotado = document.getElementById("modal-esgotado"); //faz a referencia do modal no js
+
+// Seleciona o contêiner dos botões onde as alternativas serão inseridas
 const containerAlternativas = document.getElementById("container-alternativas");
 
-//seleciona o container da tela de pergunta
+// Seleciona o contêiner principal da tela de perguntas
 const telaPergunta = document.getElementById("tela-pergunta");
 
-//seleciona o container da tela de erro
-const telaErro = document.getElementById("tela-erro");
-
-//seleciona o container da tela de sucesso
+// Seleciona o contêiner da tela final de sucesso/conclusão
 const telaSucesso = document.getElementById("tela-sucesso");
 
-// Cria listas (arrays) vazias para registrar as perguntas que o usuário acertou e errou
+// Cria uma lista vazia para registrar as respostas que o usuário acertou
 let acertos = [];
+
+// Cria uma lista vazia para registrar as respostas que o usuário errou
 let erros = [];
 
-//Pegar a pergunta atual (ex: índice 0 para a primeira pergunta)
+// Armazena a contagem de erros ocorridos apenas na pergunta atual
+let errosPerguntaAtual = 0;
+
+// Variável que guarda todo o array de perguntas vindo do arquivo JSON
+let dadosQuiz = [];
+
+// Índice da pergunta atual exibida na tela (começa em 0 para a primeira questão)
 let indiceAtual = 0;
 
+// Seleciona a tag main (que tem a classe .content no seu HTML)
+const mainContent = document.querySelector(".content");
+
+// Função assíncrona responsável por baixar os dados do quiz
 async function carregarQuiz() {
+  // Bloco try para capturar eventuais falhas de conexão ou leitura do arquivo
   try {
-    const resposta = await fetch('./data/quiz.json'); // faz a busca das perguntas
-    const dados = await resposta.json(); // "dados" agora é o seu array completo
-
-    //coleta o titulo e alternativas da pergunta atual
-    const perguntaAtiva = dados[indiceAtual];
-    
-    //Extrair o array de respostas dessa pergunta
-    let alternativas = perguntaAtiva.respostas;
-
-    //Embaralhar as alternativas
-    alternativas.sort(() => Math.random() - 0.5);
-
-    //Mostra titulo da pergunta ativa
-    perguntaCard.innerHTML = perguntaAtiva.pergunta
-
-// Limpa o contêiner caso já tenha botões de perguntas anteriores
-    containerAlternativas.innerHTML = "";
-
-    //separar os botõs em grupos de 2 blocos
-    let divGrupo; 
-
-    // Percorre a lista das 4 alternativas para criar os botões e grupos
-    alternativas.forEach((alternativa, index) => {
-      
-      // A cada 2 botões (índice 0 e 2), cria uma nova div para agrupá-los
-      if (index % 2 === 0) {
-        
-        divGrupo = document.createElement("div");//cria a div do grupo no html
-        divGrupo.classList.add("grupo-botoes");//adiciona a classe ao grupo
-        containerAlternativas.appendChild(divGrupo);//adiciona o grupo dentro da div container
-      }
-
-      // Cria a tag button
-      const botao = document.createElement("button");
-      
-      //adiciona o id ao button no html referente ao json
-      botao.id = alternativa.id; 
-      botao.innerText = alternativa.texto; //coloca o texto da resposta dentro do botão
-      botao.classList.add("button-awnser"); //adiciona a classe no botão para estilização
-
-      // Adiciona o evento de clique que chama sua função de validação
-      botao.addEventListener("click", () => {
-        validar_resposta(alternativa.texto, alternativa.id); //aciona a ação passando os parámetros necessários
-      });
-      // Insere o botão na div de grupo atual
-      divGrupo.appendChild(botao);
-    });
-
-  } catch (error) { //caso ocorra um erro na busca dos dados
-    console.error("Erro ao carregar o JSON:", error); 
+    // Faz a requisição para buscar o arquivo quiz.json
+    const resposta = await fetch('./data/quiz.json');
+    // Converte a resposta recebida para o formato de objeto/array JavaScript
+    dadosQuiz = await resposta.json();
+    // Chama a função para desenhar a primeira pergunta na tela
+    exibirPergunta();
+  } catch (error) {
+    // Exibe no console uma mensagem caso ocorra erro ao carregar o arquivo
+    console.error("Erro ao carregar o JSON:", error);
   }
 }
 
-// ao clicar na resposta acionará essa função
-function validar_resposta (response_question, id_pergunta){ //parametros que será recebido ao clicar no button escolhido
-    if (id_pergunta != "correta"){ //verifica se o id da pergunta é diferente de "correta"
-        alert("errou") //avisso de erro trocar para modal futuramente..
-        erros.push(response_question) //adicionar o a resposta a lista de erros
-        telaPergunta.style.display = "none"; //oculta a tela com a pergunta atual
-        telaErro.style.display = "block"; //mostra a div da tela de erro simulando a navegação
-        return; //cancela a função para que o bloco abaixo não execute 
-    } 
-    acertos.push(response_question) //adiciona a resposta a lista de acertos
-    alert("Acertou") //aviso de acerto (trocar para modal depois...)
-    telaPergunta.style.display = "none"; //oculta a tela com a pergunta atual
-    telaSucesso.style.display = "block"; //mostra a div da tela de sucesso simulando a navegação
+// Função responsável por renderizar a pergunta atual na tela
+function exibirPergunta() {
+  // Zera o contador de erros locais para iniciar a nova pergunta
+  errosPerguntaAtual = 0;
+
+  // Pega o objeto da pergunta correspondente ao índice atual
+  const perguntaAtiva = dadosQuiz[indiceAtual];
+
+  // Cria uma cópia da lista de alternativas dessa pergunta
+  let alternativas = [...perguntaAtiva.respostas];
+
+  // Embaralha a ordem das alternativas aleatoriamente
+  alternativas.sort(() => Math.random() - 0.5);
+
+  // Insere o texto da pergunta no elemento HTML designado
+  perguntaCard.innerText = perguntaAtiva.pergunta;
+
+  // Limpa o contêiner removendo botões de perguntas anteriores
+  containerAlternativas.innerHTML = "";
+
+  // Variável que guardará a div de agrupamento dos botões (2 em 2)
+  let divGrupo;
+
+  // Percorre todas as alternativas embaralhadas para criar os elementos visuais
+  alternativas.forEach((alternativa, index) => {
+    // Cria uma nova div agrupadora a cada 2 alternativas (índices 0 e 2)
+    if (index % 2 === 0) {
+      // Cria o elemento div no documento
+      divGrupo = document.createElement("div");
+      // Adiciona a classe CSS para estilização do grupo
+      divGrupo.classList.add("grupo-botoes");
+      // Insere o grupo recém-criado dentro do contêiner principal
+      containerAlternativas.appendChild(divGrupo);
+    }
+
+    // Cria a tag button correspondente à alternativa
+    const botao = document.createElement("button");
+    // Define o atributo id do botão com o id vindo do JSON (ex: "correta")
+    botao.id = alternativa.id;
+    // Define o texto que aparecerá escrito dentro do botão
+    botao.innerText = alternativa.texto;
+    // Adiciona a classe CSS para o estilo visual padrão do botão
+    botao.classList.add("button-awnser");
+
+    // Adiciona o evento de clique que dispara a validação da resposta
+    botao.addEventListener("click", () => {
+      // Chama a função de validação enviando texto, id e o próprio elemento do botão
+      validar_resposta(alternativa.texto, alternativa.id, botao);
+    });
+
+    // Insere o botão criado dentro da div do grupo atual
+    divGrupo.appendChild(botao);
+  });
 }
 
-carregarQuiz(); //carregar quiz ao entrar no site
+// Função acionada ao clicar em qualquer uma das alternativas
+function validar_resposta(response_question, id_pergunta, botao) {
+  // Verifica se o id da resposta clicada não é "correta"
+  if (id_pergunta !== "correta") {
+    // Adiciona a classe blocked para alterar o estilo do botão com erro
+    botao.classList.add("blocked");
+    // Desativa o botão clicado para não permitir novos cliques nele
+    botao.disabled = true;
+    // Incrementa a contagem de tentativas erradas da pergunta em andamento
+    errosPerguntaAtual++;
+
+    // --- ADICIONA AS ANIMAÇÕES SEPARADAS ---
+    // Faz a tag <main> tremer
+    mainContent.classList.add("animacao-tremer");
+    // Faz o fundo da tag <body> ficar vermelho
+    document.body.classList.add("animacao-fundo-erro");
+
+    // Remove as duas classes após 2 segundos (2000 milissegundos)
+    setTimeout(() => {
+      mainContent.classList.remove("animacao-tremer");
+      document.body.classList.remove("animacao-fundo-erro");
+    }, 2000);
+    // ---------------------------------------
+
+    // Verifica se o usuário atingiu o limite de 2 erros na mesma questão
+    if (errosPerguntaAtual === 2) {
+      // Salva a resposta incorreta na lista geral de erros
+      erros.push(response_question);
+      modalEsgotado.showModal();
+      setTimeout( () => {
+        // Avança o quiz para a próxima pergunta
+        avancarProximaPergunta();
+      }, 1500);
+    }
+    // Interrompe a execução para não cair no bloco de resposta correta
+    return;
+  }
+
+  // Se chegou aqui, a resposta foi correta; adiciona o texto à lista de acertos
+  acertos.push(response_question);
+  // Exibe um aviso temporário de acerto
+  alert("Acertou");
+  // Avança o quiz para a próxima pergunta
+  avancarProximaPergunta();
+}
+
+// Função responsável pelo fluxo de avançar a pergunta ou finalizar o quiz
+function avancarProximaPergunta() {
+  // Avança o contador do índice para a próxima pergunta da fila
+  indiceAtual++;
+
+  // Verifica se o índice ainda é menor que a quantidade total de perguntas no JSON
+  if (indiceAtual < dadosQuiz.length) {
+    // Renderiza a próxima questão na tela
+    exibirPergunta();
+  } else {
+    // Se acabaram as perguntas, chama a tela final de resultados
+    finalizarQuiz();
+  }
+}
+
+// Função executada quando todas as perguntas do quiz forem respondidas
+function finalizarQuiz() {
+  // Oculta o contêiner da tela de perguntas
+  telaPergunta.style.display = "none";
+  // Torna visível o contêiner da tela final de sucesso
+  telaSucesso.style.display = "block";
+
+  // Obtém o total de questões disponíveis no arquivo JSON
+  const totalQuestoes = dadosQuiz.length;
+  // Calcula a taxa percentual de acertos em relação ao total
+  const taxaAcerto = acertos.length / totalQuestoes;
+  // Calcula uma estimativa lúdica de QI baseada na taxa de acertos (entre 80 e 130)
+  const iqEstimado = Math.round(80 + taxaAcerto * 50);
+
+  // Constrói e injeta o resumo final diretamente no HTML da tela de sucesso
+  telaSucesso.innerHTML = `
+    <h2>Quiz Finalizado!</h2>
+    <p><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
+    <p><strong>Acertos:</strong> ${acertos.length}</p>
+    <p><strong>Erros:</strong> ${erros.length}</p>
+    <p><strong>Estimativa de QI:</strong> ${iqEstimado}</p>
+  `;
+}
+
+// Dispara a busca dos dados e inicia o quiz assim que a página é carregada
+carregarQuiz();
 
 /* 
  * ESTRUTURA DE CADA PÁGINA (FLUXO DO JOGO)
@@ -98,14 +195,8 @@ carregarQuiz(); //carregar quiz ao entrar no site
  * Página da Pergunta (Principal)
  * - Texto da pergunta em destaque.
  * - 4 botões com as alternativas (que serão embaralhadas pelo sistema).
- *
- * Página de Sucesso
- * - Mensagem de acerto (ex: "Você acertou!").
- * - Botão "Próxima Pergunta" (para avançar no quiz).
- *
- * Página de Erro
- * - Mensagem indicando que o usuário errou.
- * - Botão "Responder Novamente" (volta para a mesma perguntas).
- * - Botão "Ver Resposta Correta" (mostra qual era a opção certa).
- * - Botão "Pular Pergunta" (ignora o erro e avança para a próxima).
- */
+ * caso erre deixe desabilitado a questões retando 3, caso erre mostre o erro e pule para a proxima pergunta
+ * caso acerte mostre uma mensagem de sucesso e passe para a proxima pergunta, caso seja a ultima pergunta mostre a tela de sucesso
+ * caso seja a ultima pergunta mostre a tela de sucesso com a quantidade de acertos, e erros e uma estimaiva media de IQ na brincadeira
+ * 
+*/
