@@ -191,11 +191,13 @@ function finalizarQuiz() {
 
   // Constrói e injeta o resumo final diretamente no HTML da tela de sucesso
   telaSucesso.innerHTML = `
-    <h2>Quiz Finalizado!</h2>
-    <p><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
-    <p><strong>Acertos:</strong> ${acertos.length}</p>
-    <p><strong>Erros:</strong> ${erros.length}</p>
-    <p><strong>Estimativa de QI:</strong> ${iqEstimado}</p>
+  <div class="caixa-resultado"> 
+    <h2 id="titulo-sucesso">Quiz Finalizado!</h2>
+    <p class="texto-acertos"><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
+    <p class="texto-acertos"><strong>Acertos:</strong> ${acertos.length}</p>
+    <p class="texto-acertos"><strong>Erros:</strong> ${erros.length}</p>
+    <p class="texto-acertos"><strong>Estimativa de QI:</strong> ${iqEstimado}</p>
+  </div>
   `;
 }
 

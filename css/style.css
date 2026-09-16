@@ -314,7 +314,7 @@ background:
 }
 
 .blocked{
-  background-color: red;  
+  
 }
 
 
@@ -427,6 +427,7 @@ background:
 
 #tela-sucesso,
 #tela-erro {
+  text-align: center;
   width: 100%;
   /* Ocupa toda a largura */
 
@@ -435,6 +436,7 @@ background:
 
   padding: 24px;
   /* Espaçamento interno */
+  color: hsl(223, 69%, 91%);
 }
 
 
@@ -482,10 +484,40 @@ background:
   }
 }
 /*modal*/
-.modal {
-  width: 100%;
-  border: 10px solid red;
-  height: 100dvh;
-  opacity: 0;
-  color:white;
+#titulo-sucesso {
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro levemente transparente */
+    padding: 30px;                        /* Espaço interno para o texto não colar nas bordas */
+    border-radius: 15px;                  /* Bordas arredondadas */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); /* Uma sombra legal para dar profundidade */
+    max-width: 800px;                     /* Define uma largura máxima para a caixa não esticar muito */
+    margin: 0 auto;                       /* Centraliza a caixa na tela */
+    color: white;    
+    font-size: 100px;
+    flex-direction: column;
+    font-family: "Figtree", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    margin-bottom: 10px;
+}
+
+.texto-acertos {
+    font-size: 50px;
+    flex-direction: column;
+    font-family: "Figtree", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.caixa-resultado {
+    background: linear-gradient(
+    135deg,
+    lch(86.82% 20.08 274.75),
+    hsl(220, 47%, 52%)
+  );
+  border-radius: 30px;
+  max-width: 90%;
+  min-height: 500px;
+  margin: 95px auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  padding: 60px 30px 40px 30px; 
 }
