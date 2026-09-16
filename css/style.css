@@ -409,6 +409,10 @@ background:
   padding: 24px;
   /* Espaçamento interno */
   color: hsl(223, 69%, 91%);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -474,14 +478,14 @@ background:
 .caixa-resultado {
     background: linear-gradient(
     135deg,
-    lch(86.82% 20.08 274.75),
-    hsl(220, 47%, 52%)
+    rgb(200, 218, 255),
+    rgb(75, 113, 190)
   );
   border-radius: 30px;
-  max-width: 90%;
-  min-height: 500px;
+  width: 100%;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   padding: 60px 30px 40px 30px; 
+
 }
 
 .d-none { /* Classe utilitária usada para esconder elementos */
@@ -505,7 +509,48 @@ background:
 }
 
 .modal-conteudo{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: #fafafa;
+  width: 100%;
+  max-width:600px;
+  padding: 15px;
+  height: 150px;
+  border-radius: 20px;
+  flex-direction: column;
+    font-family: "Figtree", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+
   /*Adicionar estilização do modal *MARIA FERNANDA BISCOITO **/
+}
+
+.modal-conteudo h2 {
+  text-align: center;
+  color: #010313;
+
+}
+
+.modal-conteudo p {
+  color: #123b8f;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.modal-conteudo button {
+  border-radius: 10px;
+  padding: 10px;
+  background: linear-gradient(
+    135deg,
+    rgb(200, 218, 255),
+    rgb(75, 113, 190)
+  );
+  border: none;
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+
 }
 
 @keyframes aparecerModal {
@@ -519,3 +564,4 @@ background:
         transform: translateY(0) scale(1);
     }
 }
+

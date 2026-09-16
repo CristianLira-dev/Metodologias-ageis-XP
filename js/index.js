@@ -205,6 +205,7 @@ function finalizarQuiz() {
   telaSucesso.innerHTML = `
   <div class="caixa-resultado"> 
     <h2 id="titulo-sucesso">Quiz Finalizado!</h2>
+    <i class="fa-solid fa-trophy"></i>
     <p class="texto-acertos"><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
     <p class="texto-acertos"><strong>Acertos:</strong> ${acertos.length}</p>
     <p class="texto-acertos"><strong>Erros:</strong> ${erros.length}</p>
