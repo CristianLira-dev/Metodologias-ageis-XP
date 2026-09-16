@@ -121,7 +121,6 @@ function validar_resposta(response_question, id_pergunta, botao) {
     botao.disabled = true;
     // Incrementa a contagem de tentativas erradas da pergunta em andamento
     errosPerguntaAtual++;
-    erros.push(response_question);
 
     // --- ADICIONA AS ANIMAÇÕES SEPARADAS ---
     // Faz a tag <main> tremer
@@ -160,9 +159,12 @@ setTimeout(() => {
   document.body.classList.remove("animacao-fundo-acerto");
 }, 2000);
 
-
     confetti();
-botao.disabled = true;
+    const botoes = document.querySelectorAll(".button-awnser");
+
+botoes.forEach((botao) => {
+  botao.disabled = true;
+});
    setTimeout( () => {
         // Avança o quiz para a próxima pergunta
         avancarProximaPergunta();

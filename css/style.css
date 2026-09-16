@@ -357,7 +357,7 @@ background:
     cursor:no-drop;
     text-decoration: line-through;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    transform: 1s ease;
+    transition: 0.3s ease;
 }
 
 /* =========================
