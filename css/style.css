@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 /* Remove as margens e espaçamentos padrão de todos os elementos */
 * {
   margin: 0; /* Remove margem externa */
@@ -201,9 +202,15 @@ body.animacao-fundo-acerto::before {
 
   justify-content: center;
   /* Centraliza verticalmente */
+  padding: 10px 35px ;
 
-  flex-direction: column;
   /* Organiza os elementos um abaixo do outro */
+  flex-direction: column;
+  font-family: "Figtree", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  border-radius: 32px;
+  
 
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.12),
@@ -347,19 +354,25 @@ background:
 ========================= */
 
 .button-awnser {
-    color:hsl(0, 0%, 42%);
+    color:hwb(0 0% 100%);
     border: none;
     border-radius: 30px;
     padding:20px;
     background: linear-gradient(
       270deg,
-      hwb(98 71% 5%),
-      hsl(49, 100%, 50%)
+      hwb(215 71% 0%),
+      hwb(207 95% 1%)
     );
     margin: 8px;
     width: 434px;
     height:auto;
     font-size: 20px;
+    flex-direction: column;
+    font-family: "Figtree", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    cursor:grab;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   /*
     Estilo padrão dos botões de resposta.
 
@@ -376,7 +389,9 @@ background:
 
 /* Quando o mouse estiver sobre a resposta */
 .button-awnser:hover {
-    border: 2px solid black;
+    transform: scaleX(1.08) ;
+    transform: scaleY(1.08);
+
   /*
     Exemplo:
     alterar fundo,
@@ -465,4 +480,11 @@ background:
       para notebooks podem ser colocados aqui.
     */
   }
+}
+/*modal*/
+.modal {
+  width: 100%;
+  border: 10px solid red;
+  height: 100dvh;
+  opacity: 0;
 }
