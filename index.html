@@ -10,21 +10,21 @@
 
 <body>
 
-    <div class="modal">
+<!-- Modal de Tentativas Esgotadas -->
+<div id="modal-esgotado" class="modal d-none">
+    <div class="modal-conteudo">
+        <h2>Tentativas Esgotadas!</h2>
 
-        <!-- Modal de Tentativas Esgotadas -->
-        <dialog id="modal-esgotado">
-            <div class="modal-conteudo">
-                <h2>Tentativas Esgotadas!</h2>
-                <p>Você errou duas vezes nesta questão. Passando para a próxima pergunta...</p>
-                
-                <!-- Formulário nativo que fecha o dialog sem precisar de JS extra -->
-                <form method="dialog">
-                    <button type="submit">Entendido</button>
-                </form>
-            </div>
-        </dialog>
+        <p>
+            Você errou duas vezes nesta questão.
+            Passando para a próxima pergunta...
+        </p>
+
+        <button id="btn-modal-esgotado" type="button">
+            Entendido
+        </button>
     </div>
+</div>
 
 <div id="tela-pergunta">
         <main class="content">

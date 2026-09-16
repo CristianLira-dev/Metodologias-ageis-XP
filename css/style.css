@@ -281,7 +281,6 @@ background:
     #123b8f
   );
   /* Degradê vermelho do círculo */
-  
 
   border-radius: 50%;
   /* Transforma o elemento em círculo */
@@ -295,7 +294,6 @@ background:
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   /* Cria sombra abaixo do círculo */
 }
-
 
 /* =========================
    TEXTO DA PERGUNTA
@@ -314,7 +312,8 @@ background:
 }
 
 .blocked{
-  
+  background-color: #ccc;
+  text-decoration: line-through;
 }
 
 
@@ -323,11 +322,8 @@ background:
 ========================= */
 
 #container-alternativas {
-
-  /*
-    Container responsável por armazenar
-    todos os grupos de respostas.
-  */
+  width: 100%;
+  gap: 10px;
 }
 
 
@@ -336,18 +332,33 @@ background:
 ========================= */
 
 .grupo-botoes {
-  /*
-    Essa classe é criada pelo JavaScript.
-
-    Cada grupo contém duas alternativas.
-
-    Aqui você pode usar:
-    display: grid;
-    ou
-    display: flex;
-  */
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
+
+/* =========================
+   BOTÕES DAS RESPOSTAS (DESABILITADO)
+========================= */
+
+.button-awnser-blocked {
+    color:#010313;
+    border: none;
+    border-radius: 24px;
+    padding:20px;
+    background: #8b8a8a;
+    width: 100%;
+    font-size: 20px;
+    font-family: "Figtree", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    cursor:no-drop;
+    text-decoration: line-through;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    transform: 1s ease;
+}
 
 /* =========================
    BOTÕES DAS RESPOSTAS
@@ -356,70 +367,31 @@ background:
 .button-awnser {
     color:hwb(0 0% 100%);
     border: none;
-    border-radius: 30px;
+    border-radius: 24px;
     padding:20px;
-    background: linear-gradient(
-      270deg,
-      hwb(215 71% 0%),
-      hwb(207 95% 1%)
-    );
-    margin: 8px;
-    width: 434px;
-    height:auto;
+    background-color: #d2e4ff;
+    width: 100%;
     font-size: 20px;
-    flex-direction: column;
     font-family: "Figtree", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
-    cursor:grab;
+    cursor:pointer;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-  /*
-    Estilo padrão dos botões de resposta.
-
-    Aqui você poderá definir:
-    - largura
-    - altura
-    - fundo
-    - borda
-    - fonte
-    - espaçamento
-    - cursor
-  */
+    transition: 0.2s ease;
 }
 
 /* Quando o mouse estiver sobre a resposta */
 .button-awnser:hover {
-    transform: scaleX(1.08) ;
-    transform: scaleY(1.08);
-
-  /*
-    Exemplo:
-    alterar fundo,
-    borda,
-    sombra ou posição.
-  */
+    transform: scale(1.01);
+    background: #a0c6ff;
 }
 
 
 /* Quando o usuário estiver clicando no botão */
 .button-awnser:active {
-  /*
-    Pode ser usado para criar
-    um pequeno efeito de clique.
-  */
+      transform: scale(0.95);
+
 }
-
-
-/* Quando o botão estiver selecionado pelo teclado */
-.button-awnser:focus-visible {
-  /*
-    Importante para acessibilidade.
-
-    Pode mostrar uma borda ao navegar
-    usando a tecla TAB.
-  */
-}
-
 
 /* =========================
    TELAS DE SUCESSO E ERRO
@@ -465,7 +437,6 @@ background:
     /* Diminui a largura máxima do conteúdo */
   }
 
-
   .card-question {
     padding: 55px 32px 32px;
     /*
@@ -475,15 +446,7 @@ background:
     */
   }
 
-
-  .button-awnser {
-    /*
-      Ajustes específicos dos botões
-      para notebooks podem ser colocados aqui.
-    */
-  }
 }
-/*modal*/
 #titulo-sucesso {
     background-color: rgba(0, 0, 0, 0.7); /* Fundo escuro levemente transparente */
     padding: 30px;                        /* Espaço interno para o texto não colar nas bordas */
@@ -517,7 +480,42 @@ background:
   border-radius: 30px;
   max-width: 90%;
   min-height: 500px;
-  margin: 95px auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   padding: 60px 30px 40px 30px; 
+}
+
+.d-none { /* Classe utilitária usada para esconder elementos */
+    display: none !important; /* Oculta o elemento da tela e usa !important para garantir que nada sobrescreva essa regra */
+}
+
+/* Fundo do modal */
+.modal { /* Estiliza a camada de fundo escuro que fica atrás da janela do modal */
+    position: fixed; /* Fixa o elemento na tela, impedindo que ele se mova quando a página rolar */
+    inset: 0; /* Um atalho que define top, right, bottom e left todos como 0 (estica para os cantos) */
+    width: 100%; /* Garante que a largura ocupe 100% da tela */
+    height: 100%; /* Garante que a altura ocupe 100% da tela */
+    background: rgba(20, 32, 61, 0.65); /* Cor de fundo azul escura com 65% de opacidade (transparência) */
+    display: flex; /* Ativa o Flexbox para facilitar o alinhamento do conteúdo central */
+    align-items: center; /* Centraliza o conteúdo (a caixinha do modal) verticalmente */
+    justify-content: center; /* Centraliza o conteúdo (a caixinha do modal) horizontalmente */
+    padding: 20px; /* Adiciona 20px de respiro interno para que o modal não encoste nas bordas em telas pequenas */
+    z-index: 9999; /* Um valor alto para garantir que o modal fique por cima de todos os outros elementos do site */
+    /* Impede clicar nos elementos que estão atrás do modal */
+    pointer-events: auto; /* Garante que o fundo receba os cliques, não deixando passá-los para a página atrás */
+}
+
+.modal-conteudo{
+  /*Adicionar estilização do modal *MARIA FERNANDA BISCOITO **/
+}
+
+@keyframes aparecerModal {
+    from {
+        opacity: 0;
+        transform: translateY(-15px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }

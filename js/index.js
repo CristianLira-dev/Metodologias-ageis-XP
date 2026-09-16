@@ -1,8 +1,6 @@
 // Seleciona o elemento no HTML onde o texto da pergunta vai aparecer
 const perguntaCard = document.getElementById("text-question");
 
-const modalEsgotado = document.getElementById("modal-esgotado"); //faz a referencia do modal no js
-
 // Seleciona o contêiner dos botões onde as alternativas serão inseridas
 const containerAlternativas = document.getElementById("container-alternativas");
 
@@ -29,6 +27,17 @@ let indiceAtual = 0;
 
 // Seleciona a tag main (que tem a classe .content no seu HTML)
 const mainContent = document.querySelector(".content");
+
+// Fazer referencial ao elemento HMTL modal
+const modalEsgotado = document.getElementById("modal-esgotado");
+
+//faz referencia ao button dentro do modal para fazer a função de fecha-lo
+const btnModalEsgotado = document.getElementById("btn-modal-esgotado");
+
+//função ao clicar no botão do modal fazendo ele sumir 
+btnModalEsgotado.addEventListener("click", () => {
+  modalEsgotado.classList.add("d-none");
+});
 
 // Função assíncrona responsável por baixar os dados do quiz
 async function carregarQuiz() {
@@ -106,11 +115,13 @@ function validar_resposta(response_question, id_pergunta, botao) {
   // Verifica se o id da resposta clicada não é "correta"
   if (id_pergunta !== "correta") {
     // Adiciona a classe blocked para alterar o estilo do botão com erro
-    botao.classList.add("blocked");
+    botao.classList.remove("button-awnser")
+    botao.classList.add("button-awnser-blocked");
     // Desativa o botão clicado para não permitir novos cliques nele
     botao.disabled = true;
     // Incrementa a contagem de tentativas erradas da pergunta em andamento
     errosPerguntaAtual++;
+    erros.push(response_question);
 
     // --- ADICIONA AS ANIMAÇÕES SEPARADAS ---
     // Faz a tag <main> tremer
@@ -129,7 +140,7 @@ function validar_resposta(response_question, id_pergunta, botao) {
     if (errosPerguntaAtual === 2) {
       // Salva a resposta incorreta na lista geral de erros
       erros.push(response_question);
-      modalEsgotado.showModal();
+      modalEsgotado.classList.remove("d-none")
       setTimeout( () => {
         // Avança o quiz para a próxima pergunta
         avancarProximaPergunta();
@@ -143,22 +154,21 @@ function validar_resposta(response_question, id_pergunta, botao) {
   acertos.push(response_question);
   // Faz o fundo da tag <body> ficar vermelho
   document.body.classList.add("animacao-fundo-acerto");
-window.addEventListener("click", (event) => {
-    confetti({ 
-    position: { x: event.clientX, y: event.clientY },
-    count: 100,			// Number of particles
-    size: 2,			// Size of the particles
-    velocity: 200,		// Initial particle velocity
-    fade: true,			// Particles fall off the screen, or fade out
-    color: ["#05921f"]          // Palette the particles are picked from 
-    });
-});
+
+  // Remove a classe depois que a animação terminar
+setTimeout(() => {
+  document.body.classList.remove("animacao-fundo-acerto");
+}, 2000);
+
+
+    confetti();
 botao.disabled = true;
    setTimeout( () => {
         // Avança o quiz para a próxima pergunta
         avancarProximaPergunta();
-      }, 3000);
+      }, 2000);
 }
+
 
 // Função responsável pelo fluxo de avançar a pergunta ou finalizar o quiz
 function avancarProximaPergunta() {
