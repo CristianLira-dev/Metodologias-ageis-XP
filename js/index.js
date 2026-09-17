@@ -34,9 +34,117 @@ const modalEsgotado = document.getElementById("modal-esgotado");
 //faz referencia ao button dentro do modal para fazer a função de fecha-lo
 const btnModalEsgotado = document.getElementById("btn-modal-esgotado");
 
+//faz referencia ao elemento do botão para inicar o jogo
+const btnInicar = document.getElementById("btn-iniciar-quiz");
+
+//faz referencia a tela de inicio do quiz
+const telaInicial = document.getElementById("tela-boas-vindas");
+
+//faz referencia a tela de Grupos
+const telaGrupo = document.getElementById("tela-grupo");
+
+// Faz referência ao input onde será digitado o nome do grupo
+const inputNomeGrupo = document.getElementById("input-nome-grupo");
+
+// Faz referência ao botão que confirma o grupo
+const btnConfirmarGrupo = document.getElementById("btn-confirmar-grupo");
+
+// Faz referência à mensagem de erro
+const erroGrupo = document.getElementById("erro-grupo");
+
+// Faz referência ao título da tela de grupo
+const tituloGrupo = document.getElementById("titulo-grupo");
+
+// Faz referência à descrição da tela de grupo
+const descricaoGrupo = document.getElementById("descricao-grupo");
+
+// Mostra o nome do grupo durante o quiz
+const nomeGrupoAtual = document.getElementById("nome-grupo-atual");
+
+// Mostra o nome do grupo dentro do modal de eliminação
+const grupoEliminado = document.getElementById("grupo-eliminado");
+
+// Guarda o nome do grupo que está jogando atualmente
+let grupoAtual = "";
+
+// Informa se o JSON do quiz já foi carregado
+let quizCarregado = false;
+
+// Informa se estamos trocando de grupo
+let trocandoGrupo = false;
+
+btnInicar.addEventListener("click", () => {
+  //pagina inicial some
+  telaInicial.classList.add("d-none");
+  //tela do grupo aparece
+  telaGrupo.classList.remove("d-none");
+  // coloca o cursor automaticamente no campo
+  inputNomeGrupo.focus();
+})
+
 //função ao clicar no botão do modal fazendo ele sumir 
 btnModalEsgotado.addEventListener("click", () => {
   modalEsgotado.classList.add("d-none");
+  if (indiceAtual < dadosQuiz.length - 1){
+    indiceAtual++
+    solicitarNovoGrupo();
+  } else {
+    finalizarQuiz();
+  }
+});
+
+btnConfirmarGrupo.addEventListener("click", () => {
+  //pega o nome digitado e remove espaços do começo e do final com o trim
+  const nomeDigitado = inputNomeGrupo.value.trim();
+
+  // Verifica se o campo está vazio
+  if (nomeDigitado === "" || nomeDigitado === null) {
+   // Mostra mensagem de erro
+    erroGrupo.classList.remove("d-none");
+    //exibe a mensagem
+    erroGrupo.innerHTML = "Informe o nome do grupo que começará o desafio."
+    // Interrompe a função
+    return;
+  }
+
+  // se o nome for válido esconde a mensagem de erro
+  erroGrupo.classList.add("d-none");
+
+  // Guarda o nome do grupo
+  grupoAtual = nomeDigitado;
+
+  // Mostra o grupo atual durante o quiz
+  nomeGrupoAtual.innerText = `Grupo atual jogando: ${grupoAtual}`; 
+
+  // Limpa o campo
+  inputNomeGrupo.value = "";
+
+  // Esconde a tela dos grupos
+  telaGrupo.classList.add("d-none");
+  // Mostra a tela da pergunta
+  telaPergunta.classList.remove("d-none");
+
+  // Verifica se é a primeira vez que o jogo inicia
+  if (!quizCarregado) {
+    // Marca que o quiz já foi carregado
+    quizCarregado = true;
+    // Busca o JSON e mostra a primeira pergunta
+    carregarQuiz();
+  } else {
+    // Se o quiz já existe,
+    // significa que aconteceu uma troca de grupo
+    exibirPergunta();
+  }
+  // Finaliza o estado de troca
+  trocandoGrupo = false;
+});
+
+inputNomeGrupo.addEventListener("keydown", (event) => {
+  // Verifica se a tecla pressionada foi Enter
+  if (event.key === "Enter") {
+    // Executa o botão
+    btnConfirmarGrupo.click();
+  }
 });
 
 // Função assíncrona responsável por baixar os dados do quiz
@@ -112,6 +220,7 @@ function exibirPergunta() {
 
 // Função acionada ao clicar em qualquer uma das alternativas
 function validar_resposta(response_question, id_pergunta, botao) {
+  const botoes = document.querySelectorAll(".button-awnser");
   // Verifica se o id da resposta clicada não é "correta"
   if (id_pergunta !== "correta") {
     // Adiciona a classe blocked para alterar o estilo do botão com erro
@@ -140,10 +249,11 @@ function validar_resposta(response_question, id_pergunta, botao) {
       // Salva a resposta incorreta na lista geral de erros
       erros.push(response_question);
       modalEsgotado.classList.remove("d-none")
-      setTimeout( () => {
-        // Avança o quiz para a próxima pergunta
-        avancarProximaPergunta();
-      }, 1500);
+      
+      botoes.forEach((botao) => {
+        botao.disabled = true;
+      });
+
     }
     // Interrompe a execução para não cair no bloco de resposta correta
     return;
@@ -160,7 +270,6 @@ setTimeout(() => {
 }, 2000);
 
     confetti();
-    const botoes = document.querySelectorAll(".button-awnser");
 
 botoes.forEach((botao) => {
   botao.disabled = true;
@@ -169,6 +278,24 @@ botoes.forEach((botao) => {
         // Avança o quiz para a próxima pergunta
         avancarProximaPergunta();
       }, 2000);
+}
+
+
+function solicitarNovoGrupo() {
+  // realizando uma troca de grupo
+  trocandoGrupo = true;
+  // Esconde a tela da pergunta
+  telaPergunta.classList.add("d-none");
+  // Muda o conteúdo da tela de grupos
+  tituloGrupo.innerText = "Vez do próximo grupo!";
+  // Explica por que houve a troca
+  descricaoGrupo.innerText = `O grupo "${grupoAtual}" utilizou as duas tentativas. Informe o nome do próximo grupo.`;
+  // Muda o texto do botão
+  btnConfirmarGrupo.innerText = "Continuar desafio";
+  // Exibe novamente a tela de grupos
+  telaGrupo.classList.remove("d-none");
+  // Coloca o cursor automaticamente no input
+  inputNomeGrupo.focus();
 }
 
 
@@ -204,8 +331,8 @@ function finalizarQuiz() {
   // Constrói e injeta o resumo final diretamente no HTML da tela de sucesso
   telaSucesso.innerHTML = `
   <div class="caixa-resultado"> 
+  <i class="fa-solid fa-trophy"></i>
     <h2 id="titulo-sucesso">Quiz Finalizado!</h2>
-    <i class="fa-solid fa-trophy"></i>
     <p class="texto-acertos"><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
     <p class="texto-acertos"><strong>Acertos:</strong> ${acertos.length}</p>
     <p class="texto-acertos"><strong>Erros:</strong> ${erros.length}</p>
@@ -213,9 +340,6 @@ function finalizarQuiz() {
   </div>
   `;
 }
-
-// Dispara a busca dos dados e inicia o quiz assim que a página é carregada
-carregarQuiz();
 
 /* 
  * ESTRUTURA DE CADA PÁGINA (FLUXO DO JOGO)
