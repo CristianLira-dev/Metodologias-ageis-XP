@@ -65,13 +65,15 @@ const nomeGrupoAtual = document.getElementById("nome-grupo-atual");
 const grupoEliminado = document.getElementById("grupo-eliminado");
 
 // Guarda o nome do grupo que está jogando atualmente
-let grupoAtual = "";
+let grupoAtual;
 
 // Informa se o JSON do quiz já foi carregado
 let quizCarregado = false;
 
 // Informa se estamos trocando de grupo
 let trocandoGrupo = false;
+
+let grupos = [];
 
 btnInicar.addEventListener("click", () => {
   //pagina inicial some
@@ -110,12 +112,19 @@ btnConfirmarGrupo.addEventListener("click", () => {
   // se o nome for válido esconde a mensagem de erro
   erroGrupo.classList.add("d-none");
 
+  const novoGrupo = {
+    nome: nomeDigitado,
+    erros: 0,
+    acertos: 0
+  }
+
+  grupos.push(novoGrupo)
+
   // Guarda o nome do grupo
-  grupoAtual = nomeDigitado;
+  grupoAtual = novoGrupo;
 
   // Mostra o grupo atual durante o quiz
-  nomeGrupoAtual.innerText = `Grupo atual jogando: ${grupoAtual}`; 
-
+  nomeGrupoAtual.innerText = `Grupo atual jogando: ${grupoAtual.nome}`; 
   // Limpa o campo
   inputNomeGrupo.value = "";
 
@@ -230,7 +239,7 @@ function validar_resposta(response_question, id_pergunta, botao) {
     botao.disabled = true;
     // Incrementa a contagem de tentativas erradas da pergunta em andamento
     errosPerguntaAtual++;
-
+    grupoAtual.erros++;
     // --- ADICIONA AS ANIMAÇÕES SEPARADAS ---
     // Faz a tag <main> tremer
     mainContent.classList.add("animacao-tremer");
@@ -263,6 +272,7 @@ function validar_resposta(response_question, id_pergunta, botao) {
   acertos.push(response_question);
   // Faz o fundo da tag <body> ficar vermelho
   document.body.classList.add("animacao-fundo-acerto");
+  grupoAtual.acertos++;
 
   // Remove a classe depois que a animação terminar
 setTimeout(() => {
@@ -289,7 +299,7 @@ function solicitarNovoGrupo() {
   // Muda o conteúdo da tela de grupos
   tituloGrupo.innerText = "Vez do próximo grupo!";
   // Explica por que houve a troca
-  descricaoGrupo.innerText = `O grupo "${grupoAtual}" utilizou as duas tentativas. Informe o nome do próximo grupo.`;
+  descricaoGrupo.innerText = `O grupo "${grupoAtual.nome}" utilizou as duas tentativas. Informe o nome do próximo grupo.`;
   // Muda o texto do botão
   btnConfirmarGrupo.innerText = "Continuar desafio";
   // Exibe novamente a tela de grupos
@@ -321,24 +331,58 @@ function finalizarQuiz() {
   // Torna visível o contêiner da tela final de sucesso
   telaSucesso.style.display = "block";
 
-  // Obtém o total de questões disponíveis no arquivo JSON
-  const totalQuestoes = dadosQuiz.length;
-  // Calcula a taxa percentual de acertos em relação ao total
-  const taxaAcerto = acertos.length / totalQuestoes;
-  // Calcula uma estimativa lúdica de QI baseada na taxa de acertos (entre 80 e 130)
-  const iqEstimado = Math.round(80 + taxaAcerto * 50);
+  // Ordena os grupos pela quantidade de acertos (do maior para o menor)
+  const gruposRanqueados = grupos.sort((a, b) => b.acertos - a.acertos);
 
-  // Constrói e injeta o resumo final diretamente no HTML da tela de sucesso
+  // Cria o Cabeçalho da tela (Apenas uma vez)
   telaSucesso.innerHTML = `
-  <div class="caixa-resultado"> 
-  <i class="fa-solid fa-trophy"></i>
-    <h2 id="titulo-sucesso">Quiz Finalizado!</h2>
-    <p class="texto-acertos"><strong>Total de perguntas:</strong> ${totalQuestoes}</p>
-    <p class="texto-acertos"><strong>Acertos:</strong> ${acertos.length}</p>
-    <p class="texto-acertos"><strong>Erros:</strong> ${erros.length}</p>
-    <p class="texto-acertos"><strong>Estimativa de QI:</strong> ${iqEstimado}</p>
-  </div>
-  `;
+    <div class="sucesso-header">
+      <i class="fa-solid fa-trophy trofeu-principal"></i>
+      <h1 class="titulo-geral">Quiz Finalizado!</h1>
+      <p class="subtitulo-geral">Confira o ranking final dos grupos</p>
+      </div>
+    <div class="container-resultados"></div>
+    `;
+
+    // Seleciona a div onde os cards dos grupos vão entrar
+  const containerResultados = telaSucesso.querySelector('.container-resultados');
+  
+  setTimeout(() =>{
+  // Cria um card para cada grupo
+  gruposRanqueados.forEach((grupo, index) => {
+
+    // Define a classe baseada na posição (index começa em 0)
+    let classeRanking = "";
+    if (index === 0) {
+        classeRanking = "primeiro-lugar";
+    } else if (index === 1) {
+        classeRanking = "segundo-lugar";
+    } else if (index === 2) {
+        classeRanking = "terceiro-lugar";
+    } else {
+        classeRanking = "demais-posicoes";
+    }
+
+    containerResultados.innerHTML += `
+    <div class="caixa-resultado ${classeRanking}"> 
+      <div class="posicao-ranking">#${index + 1}</div>
+      <h2 class="nome-grupo">${grupo.nome}</h2>
+      
+      <div class="status-grupo">
+        <div class="status acertos">
+          <span class="numero">${grupo.acertos}</span>
+          <span class="legenda">Acertos</span>
+        </div>
+        <div class="status erros">
+          <span class="numero">${grupo.erros}</span>
+          <span class="legenda">Erros</span>
+        </div>
+      </div>
+    </div>
+    `;
+  });
+    confetti();
+  }, 1000)
 }
 
 /* 
