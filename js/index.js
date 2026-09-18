@@ -10,10 +10,10 @@ const telaPergunta = document.getElementById("tela-pergunta");
 // Seleciona o contêiner da tela final de sucesso/conclusão
 const telaSucesso = document.getElementById("tela-sucesso");
 
-// Cria uma lista vazia para registrar as respostas que o usuário acertou
+// Registra apenas as respostas corretas da tentativa atual
 let acertos = [];
 
-// Cria uma lista vazia para registrar as respostas que o usuário errou
+// Registra cada resposta errada da tentativa atual
 let erros = [];
 
 // Armazena a contagem de erros ocorridos apenas na pergunta atual
@@ -35,131 +35,33 @@ const modalEsgotado = document.getElementById("modal-esgotado");
 const btnModalEsgotado = document.getElementById("btn-modal-esgotado");
 
 //faz referencia ao elemento do botão para inicar o jogo
-const btnInicar = document.getElementById("btn-iniciar-quiz");
+const btnIniciar = document.getElementById("btn-iniciar-quiz");
 
 //faz referencia a tela de inicio do quiz
 const telaInicial = document.getElementById("tela-boas-vindas");
 
-//faz referencia a tela de Grupos
-const telaGrupo = document.getElementById("tela-grupo");
+btnIniciar.addEventListener("click", () => {
+  // Inicia uma tentativa com os contadores e a sequência de perguntas zerados
+  acertos = [];
+  erros = [];
+  errosPerguntaAtual = 0;
+  indiceAtual = 0;
 
-// Faz referência ao input onde será digitado o nome do grupo
-const inputNomeGrupo = document.getElementById("input-nome-grupo");
-
-// Faz referência ao botão que confirma o grupo
-const btnConfirmarGrupo = document.getElementById("btn-confirmar-grupo");
-
-// Faz referência à mensagem de erro
-const erroGrupo = document.getElementById("erro-grupo");
-
-// Faz referência ao título da tela de grupo
-const tituloGrupo = document.getElementById("titulo-grupo");
-
-// Faz referência à descrição da tela de grupo
-const descricaoGrupo = document.getElementById("descricao-grupo");
-
-// Mostra o nome do grupo durante o quiz
-const nomeGrupoAtual = document.getElementById("nome-grupo-atual");
-
-// Mostra o nome do grupo dentro do modal de eliminação
-const grupoEliminado = document.getElementById("grupo-eliminado");
-
-// Guarda o nome do grupo que está jogando atualmente
-let grupoAtual;
-
-// Informa se o JSON do quiz já foi carregado
-let quizCarregado = false;
-
-// Informa se estamos trocando de grupo
-let trocandoGrupo = false;
-
-//armazena os grupos
-let grupos = [];
-
-//armazena os nomes dos grupos
-let nomesGrupos = [];
-
-btnInicar.addEventListener("click", () => {
-  //pagina inicial some
+  // Abre diretamente a primeira pergunta do quiz
   telaInicial.classList.add("d-none");
-  //tela do grupo aparece
-  telaGrupo.classList.remove("d-none");
-  // coloca o cursor automaticamente no campo
-  inputNomeGrupo.focus();
-})
-
-//função ao clicar no botão do modal fazendo ele sumir 
-btnModalEsgotado.addEventListener("click", () => {
-  modalEsgotado.classList.add("d-none");
-  if (indiceAtual < dadosQuiz.length - 1){
-    indiceAtual++
-    solicitarNovoGrupo();
-  } else {
-    finalizarQuiz();
-  }
-});
-
-btnConfirmarGrupo.addEventListener("click", () => {
-  const nomeDigitado = inputNomeGrupo.value.trim();
-
-  // 1. Verifica se o campo está vazio
-  if (nomeDigitado === "") { // .trim() já garante que null ou strings vazias virem ""
-    erroGrupo.classList.remove("d-none");
-    erroGrupo.innerHTML = "Informe o nome do grupo que começará o desafio.";
-    return;
-  }
-
-  const nomeJaExiste = nomesGrupos.includes(nomeDigitado);
-  
-  if (nomeJaExiste) {
-    erroGrupo.classList.remove("d-none");
-    erroGrupo.innerHTML = "Este nome de grupo já está em uso. Escolha outro.";
-    return;
-  }
-
-  // Se passou nas validações, esconde o erro
-  erroGrupo.classList.add("d-none");
-
-  const novoGrupo = {
-    nome: nomeDigitado,
-    erros: 0,
-    acertos: 0
-  };
-
-  grupos.push(novoGrupo);
-
-  // Guarda o nome do grupo
-  grupoAtual = novoGrupo;
-
-  // Mostra o grupo atual durante o quiz
-  nomeGrupoAtual.innerText = `Grupo atual jogando: ${grupoAtual.nome}`; 
-  inputNomeGrupo.value = "";
-
-  // Agora sim, adiciona o nome na lista de nomes usados
-  nomesGrupos.push(grupoAtual.nome);
-
-  // Esconde a tela dos grupos
-  telaGrupo.classList.add("d-none");
   telaPergunta.classList.remove("d-none");
-
-  // Verifica se é a primeira vez que o jogo inicia
-  if (!quizCarregado) {
-    quizCarregado = true;
-    carregarQuiz();
-  } else {
-    exibirPergunta();
-  }
-  
-  trocandoGrupo = false;
+  carregarQuiz();
 });
 
-
-inputNomeGrupo.addEventListener("keydown", (event) => {
-  // Verifica se a tecla pressionada foi Enter
-  if (event.key === "Enter") {
-    // Executa o botão
-    btnConfirmarGrupo.click();
+// Fecha o aviso e continua a tentativa, mesmo após esgotar as chances da questão
+btnModalEsgotado.addEventListener("click", () => {
+  // Evita avançar mais de uma pergunta por cliques repetidos no aviso
+  if (modalEsgotado.classList.contains("d-none")) {
+    return;
   }
+
+  modalEsgotado.classList.add("d-none");
+  avancarProximaPergunta();
 });
 
 // Função assíncrona responsável por baixar os dados do quiz
@@ -234,6 +136,11 @@ function exibirPergunta() {
 }
 // Função acionada ao clicar em qualquer uma das alternativas
 function validar_resposta(response_question, id_pergunta, botao) {
+  // Uma alternativa desativada não pode alterar o resultado novamente
+  if (botao.disabled) {
+    return;
+  }
+
   const botoes = document.querySelectorAll(".button-awnser");
   
   // Verifica se o id da resposta clicada não é "correta"
@@ -244,9 +151,9 @@ function validar_resposta(response_question, id_pergunta, botao) {
     // Desativa o botão clicado para não permitir novos cliques nele
     botao.disabled = true;
     
-    // Incrementa a contagem de erros
+    // Conta cada resposta errada, mesmo que a questão seja acertada depois
     errosPerguntaAtual++;
-    grupoAtual.erros++;
+    erros.push(response_question);
     
     // --- ADICIONA AS ANIMAÇÕES DE ERRO ---
     mainContent.classList.add("animacao-tremer");
@@ -260,7 +167,9 @@ function validar_resposta(response_question, id_pergunta, botao) {
 
     // Verifica se o usuário atingiu o limite de 2 erros na mesma questão
     if (errosPerguntaAtual === 2) {
-      erros.push(response_question);
+      btnModalEsgotado.innerText = indiceAtual < dadosQuiz.length - 1
+        ? "Próxima pergunta"
+        : "Ver resultado";
       modalEsgotado.classList.remove("d-none");
       
       // Desativa todos os outros botões
@@ -276,7 +185,6 @@ function validar_resposta(response_question, id_pergunta, botao) {
   // ==========================================
   
   acertos.push(response_question);
-  grupoAtual.acertos++;
 
   //Muda a cor do botão que o usuário clicou para indicar o acerto!
   botao.classList.remove("button-awnser");
@@ -302,24 +210,6 @@ function validar_resposta(response_question, id_pergunta, botao) {
   setTimeout( () => {
     avancarProximaPergunta();
   }, 2000);
-}
-
-
-function solicitarNovoGrupo() {
-  // realizando uma troca de grupo
-  trocandoGrupo = true;
-  // Esconde a tela da pergunta
-  telaPergunta.classList.add("d-none");
-  // Muda o conteúdo da tela de grupos
-  tituloGrupo.innerText = "Vez do próximo grupo!";
-  // Explica por que houve a troca
-  descricaoGrupo.innerText = `O grupo "${grupoAtual.nome}" utilizou as duas tentativas. Informe o nome do próximo grupo.`;
-  // Muda o texto do botão
-  btnConfirmarGrupo.innerText = "Continuar desafio";
-  // Exibe novamente a tela de grupos
-  telaGrupo.classList.remove("d-none");
-  // Coloca o cursor automaticamente no input
-  inputNomeGrupo.focus();
 }
 
 
@@ -366,63 +256,28 @@ function finalizarQuiz() {
   // Torna visível o contêiner da tela final de sucesso
   telaSucesso.style.display = "block";
 
-  // Ordena os grupos pela quantidade de acertos (do maior para o menor)
-  const gruposRanqueados = grupos.sort((a, b) => {
-    if (b.acertos === a.acertos) {
-      // Se empatou nos acertos, o critério de desempate são os erros (menor número vence)
-      return a.erros - b.erros; 
-    }
-    // Se não empatou, o critério principal são os acertos (maior número vence)
-    return b.acertos - a.acertos;
-  });
-
-  // Cria o Cabeçalho da tela (Apenas uma vez)
+  // Exibe somente os totais de acertos e erros desta tentativa
   telaSucesso.innerHTML = `
     <div class="sucesso-header">
       <i class="fa-solid fa-trophy trofeu-principal"></i>
       <h1 class="titulo-geral">Quiz Finalizado!</h1>
-      <p class="subtitulo-geral">Confira o ranking final dos grupos</p>
-      </div>
-    <div class="container-resultados"></div>
-    `;
-
-    // Seleciona a div onde os cards dos grupos vão entrar
-  const containerResultados = telaSucesso.querySelector('.container-resultados');
-  
-  setTimeout(() =>{
-  // Cria um card para cada grupo
-  gruposRanqueados.forEach((grupo, index) => {
-
-    // Define a classe baseada na posição (index começa em 0)
-    let classeRanking = "";
-    if (index === 0) {
-        classeRanking = "primeiro-lugar";
-    } else if (index === 1) {
-        classeRanking = "segundo-lugar";
-    } else if (index === 2) {
-        classeRanking = "terceiro-lugar";
-    } else {
-        classeRanking = "demais-posicoes";
-    }
-
-    containerResultados.innerHTML += `
-    <div class="caixa-resultado ${classeRanking}"> 
-      <div class="posicao-ranking">#${index + 1}</div>
-      <h2 class="nome-grupo">${grupo.nome}</h2>
-      
-      <div class="status-grupo">
-        <div class="status acertos">
-          <span class="numero">${grupo.acertos}</span>
-          <span class="legenda">Acertos</span>
-        </div>
-        <div class="status erros">
-          <span class="numero">${grupo.erros}</span>
-          <span class="legenda">Erros</span>
+      <p class="subtitulo-geral">Resultado da tentativa atual</p>
+    </div>
+    <div class="container-resultados">
+      <div class="caixa-resultado">
+        <div class="status-tentativa">
+          <div class="status acertos">
+            <span class="numero">${acertos.length}</span>
+            <span class="legenda">Acertos</span>
+          </div>
+          <div class="status erros">
+            <span class="numero">${erros.length}</span>
+            <span class="legenda">Erros</span>
+          </div>
         </div>
       </div>
     </div>
-    `;
-  });
-    confetti();
-  }, 1000)
+  `;
+
+  confetti();
 }

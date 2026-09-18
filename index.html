@@ -18,12 +18,11 @@
             
             <p>
                 Você errou duas vezes nesta questão.
-                Passando para a próxima pergunta...
             </p>
         </div>
 
         <button id="btn-modal-esgotado" type="button">
-            Entendido
+            Próxima pergunta
         </button>
     </div>
 </div>
@@ -67,7 +66,7 @@
 
         </div>
 
-        <!-- Botão que futuramente iniciará o quiz pelo JavaScript -->
+        <!-- Botão que inicia a tentativa pelo JavaScript -->
         <button id="btn-iniciar-quiz" class="btn-iniciar-quiz">
             Iniciar Quiz
         </button>
@@ -81,61 +80,11 @@
 </div>
 
 
-    <!-- =====================================================
-         TELA PARA INFORMAR O GRUPO
-    ====================================================== -->
-
-    <div
-        id="tela-grupo"
-        class="tela-grupo d-none">
-        <main class="grupo-conteudo">
-
-            <!-- Indica se é o primeiro grupo
-                 ou uma troca de grupo -->
-
-            <!-- Título alterado pelo JavaScript -->
-            <h2 id="titulo-grupo">
-                Qual é o nome do seu grupo?
-            </h2>
-
-            <!-- Descrição alterada pelo JavaScript -->
-            <p id="descricao-grupo">
-                
-            </p>
-
-<div class="input-group">
-    <!-- Campo do nome -->
-    <input
-    type="text"
-    id="input-nome-grupo"
-    class="input-nome-grupo"
-    placeholder="Ex: Grupo Biscoito"
-    maxlength="30">
-    
-    <!-- Botão para confirmar -->
-    <button
-    id="btn-confirmar-grupo"
-    class="btn-confirmar-grupo"
-    type="submit">
-    Começar
-</button>
-</div>
-<!-- Mensagem exibida caso o campo fique vazio -->
-<span
-id="erro-grupo"
-                class="erro-grupo d-none">
-                Informe o nome do grupo para continuar.
-            </span>
-        </main>
-    </div>
-
-
 <div id="tela-pergunta" class="d-none">
         <main class="content">
         <div class="card-question">
             <span class="badge">?</span>
             <h3 class="text-question" id="text-question"></h3>
-            <p class="nomeGrupo" id="nome-grupo-atual"></p>
         </div>
 
         <!--os botões serão inseridos pelo js -->
