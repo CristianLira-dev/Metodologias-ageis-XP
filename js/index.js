@@ -73,7 +73,11 @@ let quizCarregado = false;
 // Informa se estamos trocando de grupo
 let trocandoGrupo = false;
 
+//armazena os grupos
 let grupos = [];
+
+//armazena os nomes dos grupos
+let nomesGrupos = [];
 
 btnInicar.addEventListener("click", () => {
   //pagina inicial some
@@ -96,57 +100,59 @@ btnModalEsgotado.addEventListener("click", () => {
 });
 
 btnConfirmarGrupo.addEventListener("click", () => {
-  //pega o nome digitado e remove espaços do começo e do final com o trim
   const nomeDigitado = inputNomeGrupo.value.trim();
 
-  // Verifica se o campo está vazio
-  if (nomeDigitado === "" || nomeDigitado === null) {
-   // Mostra mensagem de erro
+  // 1. Verifica se o campo está vazio
+  if (nomeDigitado === "") { // .trim() já garante que null ou strings vazias virem ""
     erroGrupo.classList.remove("d-none");
-    //exibe a mensagem
-    erroGrupo.innerHTML = "Informe o nome do grupo que começará o desafio."
-    // Interrompe a função
+    erroGrupo.innerHTML = "Informe o nome do grupo que começará o desafio.";
     return;
   }
 
-  // se o nome for válido esconde a mensagem de erro
+  const nomeJaExiste = nomesGrupos.includes(nomeDigitado);
+  
+  if (nomeJaExiste) {
+    erroGrupo.classList.remove("d-none");
+    erroGrupo.innerHTML = "Este nome de grupo já está em uso. Escolha outro.";
+    return;
+  }
+
+  // Se passou nas validações, esconde o erro
   erroGrupo.classList.add("d-none");
 
   const novoGrupo = {
     nome: nomeDigitado,
     erros: 0,
     acertos: 0
-  }
+  };
 
-  grupos.push(novoGrupo)
+  grupos.push(novoGrupo);
 
   // Guarda o nome do grupo
   grupoAtual = novoGrupo;
 
   // Mostra o grupo atual durante o quiz
   nomeGrupoAtual.innerText = `Grupo atual jogando: ${grupoAtual.nome}`; 
-  // Limpa o campo
   inputNomeGrupo.value = "";
+
+  // Agora sim, adiciona o nome na lista de nomes usados
+  nomesGrupos.push(grupoAtual.nome);
 
   // Esconde a tela dos grupos
   telaGrupo.classList.add("d-none");
-  // Mostra a tela da pergunta
   telaPergunta.classList.remove("d-none");
 
   // Verifica se é a primeira vez que o jogo inicia
   if (!quizCarregado) {
-    // Marca que o quiz já foi carregado
     quizCarregado = true;
-    // Busca o JSON e mostra a primeira pergunta
     carregarQuiz();
   } else {
-    // Se o quiz já existe,
-    // significa que aconteceu uma troca de grupo
     exibirPergunta();
   }
-  // Finaliza o estado de troca
+  
   trocandoGrupo = false;
 });
+
 
 inputNomeGrupo.addEventListener("keydown", (event) => {
   // Verifica se a tecla pressionada foi Enter

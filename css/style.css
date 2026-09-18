@@ -705,9 +705,9 @@ background:
   background-color: #fafafa;
   width: 100%;
   max-width:500px;
-  padding: 15px 20px;
+  padding: 30px 40px;
   height: 100%;
-  max-height: 180px;
+  max-height: 220px;
   border-radius: 20px;
   flex-direction: column;
     font-family: "Figtree", sans-serif;
@@ -733,7 +733,7 @@ background:
 
 .modal-conteudo button {
   border-radius: 10px;
-  padding: 10px;
+  padding: 15px 10px;
   background: #2f54a0;
   color: #fafafa;
   font-size: 16px;
