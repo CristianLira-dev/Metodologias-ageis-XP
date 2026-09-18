@@ -367,7 +367,14 @@ function finalizarQuiz() {
   telaSucesso.style.display = "block";
 
   // Ordena os grupos pela quantidade de acertos (do maior para o menor)
-  const gruposRanqueados = grupos.sort((a, b) => b.acertos - a.acertos);
+  const gruposRanqueados = grupos.sort((a, b) => {
+    if (b.acertos === a.acertos) {
+      // Se empatou nos acertos, o critério de desempate são os erros (menor número vence)
+      return a.erros - b.erros; 
+    }
+    // Se não empatou, o critério principal são os acertos (maior número vence)
+    return b.acertos - a.acertos;
+  });
 
   // Cria o Cabeçalho da tela (Apenas uma vez)
   telaSucesso.innerHTML = `
@@ -419,15 +426,3 @@ function finalizarQuiz() {
     confetti();
   }, 1000)
 }
-
-/* 
- * ESTRUTURA DE CADA PÁGINA (FLUXO DO JOGO)
- *
- * Página da Pergunta (Principal)
- * - Texto da pergunta em destaque.
- * - 4 botões com as alternativas (que serão embaralhadas pelo sistema).
- * caso erre deixe desabilitado a questões retando 3, caso erre mostre o erro e pule para a proxima pergunta
- * caso acerte mostre uma mensagem de sucesso e passe para a proxima pergunta, caso seja a ultima pergunta mostre a tela de sucesso
- * caso seja a ultima pergunta mostre a tela de sucesso com a quantidade de acertos, e erros e uma estimaiva media de IQ na brincadeira
- * 
-*/
