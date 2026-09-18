@@ -226,68 +226,76 @@ function exibirPergunta() {
     divGrupo.appendChild(botao);
   });
 }
-
 // Função acionada ao clicar em qualquer uma das alternativas
 function validar_resposta(response_question, id_pergunta, botao) {
   const botoes = document.querySelectorAll(".button-awnser");
+  
   // Verifica se o id da resposta clicada não é "correta"
   if (id_pergunta !== "correta") {
     // Adiciona a classe blocked para alterar o estilo do botão com erro
-    botao.classList.remove("button-awnser")
+    botao.classList.remove("button-awnser");
     botao.classList.add("button-awnser-blocked");
     // Desativa o botão clicado para não permitir novos cliques nele
     botao.disabled = true;
-    // Incrementa a contagem de tentativas erradas da pergunta em andamento
+    
+    // Incrementa a contagem de erros
     errosPerguntaAtual++;
     grupoAtual.erros++;
-    // --- ADICIONA AS ANIMAÇÕES SEPARADAS ---
-    // Faz a tag <main> tremer
+    
+    // --- ADICIONA AS ANIMAÇÕES DE ERRO ---
     mainContent.classList.add("animacao-tremer");
-    // Faz o fundo da tag <body> ficar vermelho
     document.body.classList.add("animacao-fundo-erro");
 
-    // Remove as duas classes após 2 segundos (2000 milissegundos)
+    // Remove as duas classes após 2 segundos
     setTimeout(() => {
       mainContent.classList.remove("animacao-tremer");
       document.body.classList.remove("animacao-fundo-erro");
     }, 2000);
-    // ---------------------------------------
 
     // Verifica se o usuário atingiu o limite de 2 erros na mesma questão
     if (errosPerguntaAtual === 2) {
-      // Salva a resposta incorreta na lista geral de erros
       erros.push(response_question);
-      modalEsgotado.classList.remove("d-none")
+      modalEsgotado.classList.remove("d-none");
       
-      botoes.forEach((botao) => {
-        botao.disabled = true;
+      // Desativa todos os outros botões
+      botoes.forEach((b) => {
+        b.disabled = true;
       });
-
     }
-    // Interrompe a execução para não cair no bloco de resposta correta
-    return;
+    return; // Interrompe a execução aqui se errou
   }
 
-  // Se chegou aqui, a resposta foi correta; adiciona o texto à lista de acertos
+  // ==========================================
+  // SE CHEGOU AQUI, A RESPOSTA FOI CORRETA!
+  // ==========================================
+  
   acertos.push(response_question);
-  // Faz o fundo da tag <body> ficar vermelho
-  document.body.classList.add("animacao-fundo-acerto");
   grupoAtual.acertos++;
 
-  // Remove a classe depois que a animação terminar
-setTimeout(() => {
-  document.body.classList.remove("animacao-fundo-acerto");
-}, 2000);
+  //Muda a cor do botão que o usuário clicou para indicar o acerto!
+  botao.classList.remove("button-awnser");
+  botao.classList.add("button-awnser-correct");
 
-    confetti();
+  // Faz o fundo da tag <body> ficar verde (animacao-fundo-acerto)
+  document.body.classList.add("animacao-fundo-acerto");
 
-botoes.forEach((botao) => {
-  botao.disabled = true;
-});
-   setTimeout( () => {
-        // Avança o quiz para a próxima pergunta
-        avancarProximaPergunta();
-      }, 2000);
+  // Remove a classe do fundo depois que a animação terminar
+  setTimeout(() => {
+    document.body.classList.remove("animacao-fundo-acerto");
+  }, 2000);
+
+  // dispara os confetes
+  confetti();
+
+  // Desabilita todos os botões para o usuário não clicar duas vezes
+  botoes.forEach((b) => {
+    b.disabled = true;
+  });
+  
+  // Aguarda 2 segundos (para o usuário ver o confete e a cor verde) e avança
+  setTimeout( () => {
+    avancarProximaPergunta();
+  }, 2000);
 }
 
 
