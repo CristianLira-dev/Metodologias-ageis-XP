@@ -319,17 +319,38 @@ function solicitarNovoGrupo() {
 
 // Função responsável pelo fluxo de avançar a pergunta ou finalizar o quiz
 function avancarProximaPergunta() {
-  // Avança o contador do índice para a próxima pergunta da fila
-  indiceAtual++;
+  // 1. Inicia a animação de saída (a pergunta atual desliza e some)
+  mainContent.classList.add("esconder-pergunta");
 
-  // Verifica se o índice ainda é menor que a quantidade total de perguntas no JSON
-  if (indiceAtual < dadosQuiz.length) {
-    // Renderiza a próxima questão na tela
-    exibirPergunta();
-  } else {
-    // Se acabaram as perguntas, chama a tela final de resultados
-    finalizarQuiz();
-  }
+  // 2. Espera 400 milissegundos (o tempo exato da animação no CSS)
+  setTimeout(() => {
+    
+    // Avança o contador do índice para a próxima pergunta da fila
+    indiceAtual++;
+
+    // Verifica se o índice ainda é menor que a quantidade total de perguntas no JSON
+    if (indiceAtual < dadosQuiz.length) {
+      // Renderiza a próxima questão na tela (ainda invisível)
+      exibirPergunta();
+      
+      // Remove a animação de saída e aplica a de entrada (nova pergunta surge)
+      mainContent.classList.remove("esconder-pergunta");
+      mainContent.classList.add("mostrar-pergunta");
+
+      // Limpa a animação de entrada após 400ms para ficar pronto para a próxima
+      setTimeout(() => {
+        mainContent.classList.remove("mostrar-pergunta");
+      }, 400);
+
+    } else {
+      // Limpa a animação para não bugar a tela final
+      mainContent.classList.remove("esconder-pergunta");
+      
+      // Se acabaram as perguntas, chama a tela final de resultados
+      finalizarQuiz();
+    }
+    
+  }, 400); // Fim do setTimeout principal
 }
 
 // Função executada quando todas as perguntas do quiz forem respondidas
